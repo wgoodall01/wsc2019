@@ -1,0 +1,180 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='WolframDesktop 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       161,          7]
+NotebookDataLength[      6074,        172]
+NotebookOptionsPosition[      4295,        133]
+NotebookOutlinePosition[      4934,        153]
+CellTagsIndexPosition[      4891,        150]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Automatically Deduce the Zoom for a 
+Satellite Photo\
+\>", "Title",
+ CellChangeTimes->{
+  3.771238421741387*^9, {3.771240015916461*^9, 3.7712400253782897`*^9}, {
+   3.7712400874968915`*^9, 3.7712400890390787`*^9}, {3.771243690237979*^9, 
+   3.771243697722268*^9}, 
+   3.7712439220716534`*^9},ExpressionUUID->"0d08147b-8e61-423f-9607-\
+ed1536f49981"],
+
+Cell["William Goodall", "Subtitle",
+ CellChangeTimes->{{3.771245678620637*^9, 
+  3.7712457018489623`*^9}},ExpressionUUID->"2a8216d7-ea01-4659-821a-\
+39d2a163f54e"],
+
+Cell[TextData[StyleBox["Mentor: Zhamilya Bilyalova",
+ FontSize->18]], "Subtitle",
+ CellChangeTimes->{{3.771238888925271*^9, 3.771238889667898*^9}, {
+  3.7712437046374226`*^9, 
+  3.7712437101816354`*^9}},ExpressionUUID->"8c5b5b59-469b-4336-bf64-\
+b52547a5a7ae"],
+
+Cell[CellGroupData[{
+
+Cell["Abstract", "Section",
+ CellChangeTimes->{{3.77124572798586*^9, 
+  3.771245729057213*^9}},ExpressionUUID->"edea176e-5f55-4aea-8bb3-\
+c95a30c13f07"],
+
+Cell["\<\
+We create an algorithm which, given a satellite image, can deduce the scale \
+the image was taken at: which distance in the image corresponds with which \
+distance over the pictured terrain. There are several approaches which can \
+work to solve this problem. Using traditional image processing techniques, we \
+can separate the image into high- and low-frequency information, and \
+determine whether that correlates with zoom level. We can also take the \
+machine learning approach, training a model on satellite images generated at \
+different scales.\
+\>", "Text",
+ CellChangeTimes->{
+  3.7712384256366267`*^9, {3.7712400269818053`*^9, 3.7712400675182095`*^9}, {
+   3.7712413236001806`*^9, 3.771241382323324*^9}, {3.771241480809188*^9, 
+   3.771241490496694*^9}},ExpressionUUID->"938c656e-ba96-4d6e-90c0-\
+a7ceba88dffb"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Gathering Data", "Section",
+ CellChangeTimes->{{3.771245732325133*^9, 
+  3.7712457337015324`*^9}},ExpressionUUID->"16926ec5-b347-4171-8496-\
+ea7fb2f0e515"],
+
+Cell[TextData[{
+ "Function ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    RowBox[{"(", 
+     RowBox[{"Location", ",", " ", "Zoom"}], ")"}], " ", "\[Rule]", "Image", 
+    " "}], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "b04844b8-6258-425e-b018-22b21f3a104a"]
+}], "Text",
+ CellChangeTimes->{{3.771245985798555*^9, 
+  3.771246032808258*^9}},ExpressionUUID->"c6af9230-6160-4480-9223-\
+d095294f52b2"],
+
+Cell["Repeat the above in a pyramid, etc.", "Text",
+ CellChangeTimes->{{3.7712464548933525`*^9, 
+  3.7712464602591114`*^9}},ExpressionUUID->"a2d85887-a8c9-4aa7-aed1-\
+c1283b533735"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Extracting signals", "Section",
+ CellChangeTimes->{{3.771245834889225*^9, 
+  3.7712458392684975`*^9}},ExpressionUUID->"556ab5ce-439a-4178-9f3f-\
+baea677f52b3"],
+
+Cell[TextData[{
+ "Find an interesting ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"Image", " ", "\[Rule]", " ", "Number"}], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "7d1058ce-433c-4720-81c1-b6f43826aaf7"],
+ " function, apply it to a scaled set of images, and plot the (hopefully \
+interesting) result."
+}], "Text",
+ CellChangeTimes->{{3.7712458419251432`*^9, 
+  3.7712458936117067`*^9}},ExpressionUUID->"ff2fbd7f-f04a-49e2-8bad-\
+fe723907755b"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Machine Learning", "Section",
+ CellChangeTimes->{{3.7712459118631473`*^9, 
+  3.7712459158656406`*^9}},ExpressionUUID->"c6fd7d79-413c-49e8-a133-\
+2ead63f1334c"],
+
+Cell["Dump everything into Predict[] and see what happens", "Text",
+ CellChangeTimes->{{3.7712459179613085`*^9, 
+  3.7712459262105284`*^9}},ExpressionUUID->"6a845afc-306e-451a-abae-\
+ee376cbc732d"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{775, 872},
+WindowMargins->{{530, Automatic}, {Automatic, 137}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 11, 2019)",
+StyleDefinitions->Notebook[{
+   Cell[
+    StyleData[StyleDefinitions -> "Default.nb"]]}, WindowSize -> {775, 872}, 
+  WindowMargins -> {{Automatic, 106}, {26, Automatic}}, Visible -> False, 
+  FrontEndVersion -> "12.0 for Microsoft Windows (64-bit) (April 11, 2019)", 
+  StyleDefinitions -> "PrivateStylesheetFormatting.nb"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[583, 22, 359, 9, 156, "Title",ExpressionUUID->"0d08147b-8e61-423f-9607-ed1536f49981"],
+Cell[945, 33, 163, 3, 53, "Subtitle",ExpressionUUID->"2a8216d7-ea01-4659-821a-39d2a163f54e"],
+Cell[1111, 38, 260, 5, 45, "Subtitle",ExpressionUUID->"8c5b5b59-469b-4336-bf64-b52547a5a7ae"],
+Cell[CellGroupData[{
+Cell[1396, 47, 152, 3, 67, "Section",ExpressionUUID->"edea176e-5f55-4aea-8bb3-c95a30c13f07"],
+Cell[1551, 52, 833, 14, 144, "Text",ExpressionUUID->"938c656e-ba96-4d6e-90c0-a7ceba88dffb"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2421, 71, 161, 3, 67, "Section",ExpressionUUID->"16926ec5-b347-4171-8496-ea7fb2f0e515"],
+Cell[2585, 76, 422, 13, 34, "Text",ExpressionUUID->"c6af9230-6160-4480-9223-d095294f52b2"],
+Cell[3010, 91, 181, 3, 34, "Text",ExpressionUUID->"a2d85887-a8c9-4aa7-aed1-c1283b533735"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3228, 99, 165, 3, 67, "Section",ExpressionUUID->"556ab5ce-439a-4178-9f3f-baea677f52b3"],
+Cell[3396, 104, 469, 12, 56, "Text",ExpressionUUID->"ff2fbd7f-f04a-49e2-8bad-fe723907755b"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3902, 121, 165, 3, 67, "Section",ExpressionUUID->"c6fd7d79-413c-49e8-a133-2ead63f1334c"],
+Cell[4070, 126, 197, 3, 34, "Text",ExpressionUUID->"6a845afc-306e-451a-abae-ee376cbc732d"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
