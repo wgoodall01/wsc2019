@@ -1,2 +1,5 @@
+
+# ignore massive generated files
 *.mx
+*.wlnet
 *.zip
