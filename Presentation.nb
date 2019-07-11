@@ -1,0 +1,154 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='WolframDesktop 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       161,          7]
+NotebookDataLength[      5183,        146]
+NotebookOptionsPosition[      3837,        115]
+NotebookOutlinePosition[      4180,        130]
+CellTagsIndexPosition[      4137,        127]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Title", "Section",
+ CellChangeTimes->{{3.771845329964602*^9, 
+  3.771845330383481*^9}},ExpressionUUID->"dea165a3-a269-4ca6-b342-\
+75e9ae1fd59a"],
+
+Cell["\<\
+Overfitting the World: Determining Physical Scale from Satellite Images\
+\>", "Text",
+ CellChangeTimes->{
+  3.7718456952110205`*^9},ExpressionUUID->"10fb42d8-eca1-4674-8540-\
+4d289c28cc8d"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Description", "Section",
+ CellChangeTimes->{{3.771845332242509*^9, 
+  3.7718453334073925`*^9}},ExpressionUUID->"696c0c70-4c0f-4d6d-968f-\
+41da296b261e"],
+
+Cell["\<\
+We create an algorithm which can deduce physical scale from a satellite \
+image: the correspondence between distance in pixels and distance in \
+kilometers.
+
+This is a very challenging problem because of the nature of the world\
+\[CloseCurlyQuote]s terrain: at different zoom levels, it\[CloseCurlyQuote]s \
+highly self-similar.
+
+While we explored several approaches to this problem, the most successful \
+solution used feature extraction to convert each image to a small vector, \
+then trained a small feed-forward neural network to predict zoom from each \
+set of features. \
+\>", "Text",
+ CellChangeTimes->{{3.7718456281611795`*^9, 3.7718456349978924`*^9}, {
+  3.771845747077338*^9, 3.7718458668268785`*^9}, {3.7718459025580077`*^9, 
+  3.771845918478424*^9}, {3.771846031525139*^9, 
+  3.7718460615597973`*^9}},ExpressionUUID->"9a0c209c-1670-4491-9466-\
+ebfb48ba480b"],
+
+Cell["", "Text",ExpressionUUID->"7dc5b0eb-7672-47dc-b18c-b8e04c9f1ae7"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Summary of Results ", "Section",
+ CellChangeTimes->{{3.77184533666059*^9, 
+  3.7718453388427544`*^9}},ExpressionUUID->"d8487cbd-5127-4493-9968-\
+68931a0006e7"],
+
+Cell["\<\
+[ detailed summary of what has been achieved during the work on your project \
+at the program ]\
+\>", "Text",
+ CellChangeTimes->{{3.7718453409446855`*^9, 
+  3.7718453793849287`*^9}},ExpressionUUID->"59df7195-f323-400e-82e9-\
+46c92bc89a7f"],
+
+Cell["\<\
+ We create an algorithm which, given a satellite image, can deduce the scale \
+the image was taken at: which distance in the image corresponds with which \
+distance over the pictured terrain. There are several approaches which can \
+work to solve this problem. Using traditional image processing techniques, we \
+can separate the image into high - and low - frequency information, and \
+determine whether that correlates with zoom level. We can also take the \
+machine learning approach, training a model on satellite images generated at \
+different scales.\
+\>", "Text",
+ CellChangeTimes->{{3.7718455653469563`*^9, 
+  3.771845570280759*^9}},ExpressionUUID->"8ebeb5f7-aaf8-45b4-812f-\
+760d797ca767"],
+
+Cell["", "Text",
+ CellChangeTimes->{{3.7718455789366074`*^9, 
+  3.7718456261685104`*^9}},ExpressionUUID->"af733af5-e2b2-40bb-81f3-\
+0bf079aecd4c"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["Future Work", "Section",
+ CellChangeTimes->{{3.77184538434566*^9, 
+  3.771845385804758*^9}},ExpressionUUID->"d8f07d1d-a7b0-4f56-8386-\
+4db96d200add"],
+
+Cell["\<\
+[ paragraph of text describing possible future directions of your work ]\
+\>", "Text",
+ CellChangeTimes->{{3.7718453869806123`*^9, 
+  3.771845396656732*^9}},ExpressionUUID->"25afd9d4-c780-4171-abae-\
+755a3c1d64d3"]
+}, Open  ]]
+},
+WindowSize->{923, 1153},
+WindowMargins->{{Automatic, -7}, {Automatic, 0}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 11, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[583, 22, 150, 3, 67, "Section",ExpressionUUID->"dea165a3-a269-4ca6-b342-75e9ae1fd59a"],
+Cell[736, 27, 199, 5, 34, "Text",ExpressionUUID->"10fb42d8-eca1-4674-8540-4d289c28cc8d"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[972, 37, 158, 3, 67, "Section",ExpressionUUID->"696c0c70-4c0f-4d6d-968f-41da296b261e"],
+Cell[1133, 42, 880, 18, 166, "Text",ExpressionUUID->"9a0c209c-1670-4491-9466-ebfb48ba480b"],
+Cell[2016, 62, 71, 0, 34, "Text",ExpressionUUID->"7dc5b0eb-7672-47dc-b18c-b8e04c9f1ae7"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2124, 67, 165, 3, 67, "Section",ExpressionUUID->"d8487cbd-5127-4493-9968-68931a0006e7"],
+Cell[2292, 72, 249, 6, 34, "Text",ExpressionUUID->"59df7195-f323-400e-82e9-46c92bc89a7f"],
+Cell[2544, 80, 709, 12, 122, "Text",ExpressionUUID->"8ebeb5f7-aaf8-45b4-812f-760d797ca767"],
+Cell[3256, 94, 146, 3, 34, "Text",ExpressionUUID->"af733af5-e2b2-40bb-81f3-0bf079aecd4c"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3439, 102, 155, 3, 67, "Section",ExpressionUUID->"d8f07d1d-a7b0-4f56-8386-4db96d200add"],
+Cell[3597, 107, 224, 5, 34, "Text",ExpressionUUID->"25afd9d4-c780-4171-abae-755a3c1d64d3"]
+}, Open  ]]
+}
+]
+*)
+
