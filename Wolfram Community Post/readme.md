@@ -1,16 +1,18 @@
 # Fitting the World: Determining Physical Scale from Satellite Images
 
+> cover-image.png
+
 ## What are we trying to do?
 
 The goal of this project is to produce an algorithm which can find the physical scale of any satellite image: the relationship between the content of the image, and the area it covers in kilometers.
 
-> figure here, definitely.
+> fig_examples.png
 
 This is a very challenging problem because of the characteristics of the world's terrain. At different zoom levels, it's highly self-similar, like a fractal. We need to find a method to extract useful information from these images, while also ignoring the parts which are repeated across zoom levels.
 
 There are several ways to approach the problem. Some of the more manual methods involve trying to label image parts which only show up at certain scales. For instance, you could rely on the fact that all rooftops are generally roughly the same size, all roads have similar widths, and so on.
 
-> maybe a figure with outlines around things?
+> fig_structure.png
 
 Those approaches all need lots of manual work, though. We attempted to solve the problem automatically, exploring ideas that might let us predict map zoom without relying on hard-coded rules.
 
@@ -52,7 +54,7 @@ Working on this project, the majority of the time was spent trying several diffe
 
 One attempt was visual pre-processing: running segmentation or binarization on each image before training a model or extracting some metric. Every time we did this, although the images looked really neat, the accuracy of our predictions were far worse. 
 
-> some cool-looking stuff here
+> fig_processing.png
 
 All of those preprocessing methods reduce the dimensionality of the images, but it turns out that they focus on the wrong features in the process. Our network was supposed to pick up on the large patterns: rivers, landmasses, and so on. When we segmented images, the network was forced to focus on the small details we highlighted. All in all, preprocessing using traditional CV was a failure.
 
@@ -60,7 +62,7 @@ We also tried training a convolutional neural network from scratch on the images
 
 The next idea we had was just to throw the entire dataset into `Predict[]` and see what would happen. This worked shockingly well, considering how easy it was:
 
-> plot of Predict[] training graph.
+> fig_predict.png
 
 So the next question we had was: how? What was `Predict[]` doing behind the scenes? Doing some research, we discovered a couple starting points for our own neural network model:
 
@@ -111,7 +113,7 @@ features = imageSet[All, <|#, "Features" -> fExtractor[#Image]|> &]
 
 When you plot the feature vectors of a few images, you can see the variance between them is clear:
 
-> feature space matrix plot
+> fig_featurematrix.png
 
 Although the network structure was fairly simple, we automated the generation of good hyperparameters. We trained hundreds of slightly-different networks, and evaluated their statistical performance. Out of many different permutations of layer count, layer size, activation function choice, training speed, and so on, we picked the ones which work best. The final network design we settled on was this:
 
@@ -190,17 +192,17 @@ In the end, the general architecture of the most successful model looked like th
 
 When we evaluated each image in our test set with this network, we got the following results:
 
-> result plot! yay :)
+> fig_resultplot.png
 
 This plot shows actual zoom levels on the $x$-axis, and estimated zoom on the $y$. A reference line shows what a perfect prediction would look like. Analyzed statistically, the network had a standard deviation of 30.37 km, and an $r^2$ value of 0.732. 
 
 This network clearly "gets the gist" of the data it's presented. However, these results were not portable to different satellite image datasets. When we evaluated a separate test set, gathered from Wolfram satellite imagery, we got this result:
 
-> bad result plot. 
+> fig_resultplotwolfram.png
 
 It is clear that the network is learning something specific to the DigitalGlobe dataset we used to train it. We would hesitate to call that overfitting, because it can extrapolate to locations it has never seen before, but it relies on the specific look and tone of the DigitalGlobe data. After all, the two image sets look very different:
 
-> images look very different
+> fig_satcomparison.png
 
 It is possible that the network is just confused by the new colors, rather than confused by the structure of the terrain in the Wolfram dataset. Either way, though, the scope of this result is limited to images similar to the satellite dataset on which it was trained.
 
