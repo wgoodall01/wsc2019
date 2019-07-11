@@ -1,3 +1,6 @@
 *.mx
 *.zip
 data
+
+# VS used as a markdown editor
+.vs

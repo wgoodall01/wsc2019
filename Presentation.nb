@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       161,          7]
-NotebookDataLength[      5183,        146]
-NotebookOptionsPosition[      3837,        115]
-NotebookOutlinePosition[      4180,        130]
-CellTagsIndexPosition[      4137,        127]
+NotebookDataLength[      8732,        206]
+NotebookOptionsPosition[      7192,        173]
+NotebookOutlinePosition[      7535,        188]
+CellTagsIndexPosition[      7492,        185]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -26,10 +26,11 @@ Cell["Title", "Section",
 75e9ae1fd59a"],
 
 Cell["\<\
-Overfitting the World: Determining Physical Scale from Satellite Images\
+Fitting the World: Determining Physical Scale from Satellite Images\
 \>", "Text",
  CellChangeTimes->{
-  3.7718456952110205`*^9},ExpressionUUID->"10fb42d8-eca1-4674-8540-\
+  3.7718456952110205`*^9, {3.771847843230277*^9, 
+   3.7718478438236914`*^9}},ExpressionUUID->"10fb42d8-eca1-4674-8540-\
 4d289c28cc8d"]
 }, Open  ]],
 
@@ -47,20 +48,24 @@ kilometers.
 
 This is a very challenging problem because of the nature of the world\
 \[CloseCurlyQuote]s terrain: at different zoom levels, it\[CloseCurlyQuote]s \
-highly self-similar.
+highly self-similar. We need a method to extract useful information from \
+these images, while also ignoring the parts which are self-similar.
 
 While we explored several approaches to this problem, the most successful \
 solution used feature extraction to convert each image to a small vector, \
 then trained a small feed-forward neural network to predict zoom from each \
-set of features. \
+set of features. Although the self-similarity of each image makes more \
+traditional CV approaches very difficult, a neural network can learn the \
+right features to approximate zoom well.\
 \>", "Text",
  CellChangeTimes->{{3.7718456281611795`*^9, 3.7718456349978924`*^9}, {
   3.771845747077338*^9, 3.7718458668268785`*^9}, {3.7718459025580077`*^9, 
-  3.771845918478424*^9}, {3.771846031525139*^9, 
-  3.7718460615597973`*^9}},ExpressionUUID->"9a0c209c-1670-4491-9466-\
-ebfb48ba480b"],
-
-Cell["", "Text",ExpressionUUID->"7dc5b0eb-7672-47dc-b18c-b8e04c9f1ae7"]
+  3.771845918478424*^9}, {3.771846031525139*^9, 3.7718460615597973`*^9}, {
+  3.771847582535984*^9, 3.7718475988683553`*^9}, {3.7718477871803446`*^9, 
+  3.771847808504163*^9}, {3.771847847106909*^9, 3.771847878562189*^9}, {
+  3.7718480882008915`*^9, 
+  3.771848133561057*^9}},ExpressionUUID->"9a0c209c-1670-4491-9466-\
+ebfb48ba480b"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -79,23 +84,53 @@ at the program ]\
 46c92bc89a7f"],
 
 Cell["\<\
- We create an algorithm which, given a satellite image, can deduce the scale \
-the image was taken at: which distance in the image corresponds with which \
-distance over the pictured terrain. There are several approaches which can \
-work to solve this problem. Using traditional image processing techniques, we \
-can separate the image into high - and low - frequency information, and \
-determine whether that correlates with zoom level. We can also take the \
-machine learning approach, training a model on satellite images generated at \
-different scales.\
+We created several models which all do a fantastic job at modelling a few \
+very specific things. The model trained on the continental United States was \
+flexible---you could pass it an image from mostly anywhere in the country, \
+and it would classify its position to a fairly good degree of accuracy. The \
+model trained on Massachusetts was inflexible, but far more accurate. Given a \
+limited set of data from DigitalGlobe, within a small area, it could predict \
+zoom levels with great accuracy. However, move outside of that area, and it \
+would break. \
 \>", "Text",
- CellChangeTimes->{{3.7718455653469563`*^9, 
-  3.771845570280759*^9}},ExpressionUUID->"8ebeb5f7-aaf8-45b4-812f-\
-760d797ca767"],
+ CellChangeTimes->{{3.771781458133171*^9, 3.7717815192839236`*^9}, {
+  3.7717816712294025`*^9, 3.771781731766387*^9}, {3.771816286772132*^9, 
+  3.7718163024679766`*^9}, {3.7718163394690065`*^9, 3.771816366411482*^9}, {
+  3.7718482299333687`*^9, 3.771848238474519*^9}, {3.7718482938888025`*^9, 
+  3.771848294150132*^9}, {3.771848695672805*^9, 3.7718486961136255`*^9}, {
+  3.7718488228978257`*^9, 
+  3.771848823314652*^9}},ExpressionUUID->"7730966a-973f-4deb-9791-\
+a914db24818d"],
 
-Cell["", "Text",
- CellChangeTimes->{{3.7718455789366074`*^9, 
-  3.7718456261685104`*^9}},ExpressionUUID->"af733af5-e2b2-40bb-81f3-\
-0bf079aecd4c"]
+Cell["\<\
+For both networks, using a different imagery provider breaks the prediction. \
+Taking a look at the DigitalGlobe and Wolfram satellite data, we can begin to \
+see why: the color grading of the two images is completely different. This \
+would explain the loss in precision if the networks were really trained on \
+the fine-grained and unstable detail of the images, rather than the \
+human-readable patterns.\
+\>", "Text",
+ CellChangeTimes->{{3.7718163704047976`*^9, 3.7718163724024544`*^9}, {
+  3.771816403789357*^9, 3.771816439707166*^9}, {3.7718482607958145`*^9, 
+  3.771848271596961*^9}, {3.771848302737135*^9, 
+  3.771848302778064*^9}},ExpressionUUID->"91f4f529-8af9-4594-8c58-\
+80f2c3193498"],
+
+Cell["\<\
+In terms of the ideal solution to this problem, a function which takes any \
+satellite image and returns its physical scale, we fell short. With the \
+limited (2-week) scale of this project, gathering enough data and training a \
+network general enough to successfully predict the zoom of any satellite \
+image proved to be very difficult. However, what we did create---a neural \
+network which can successfully classify images from one provider to a fairly \
+high accuracy---is a good start.\
+\>", "Text",
+ CellChangeTimes->{{3.771781528356656*^9, 3.7717815538415184`*^9}, {
+  3.771816177731517*^9, 3.7718162433971505`*^9}, {3.771816409716504*^9, 
+  3.7718164099329243`*^9}, {3.771816930725707*^9, 3.7718169311056895`*^9}, {
+  3.7718483069039893`*^9, 3.7718483413109875`*^9}, {3.7718488179280915`*^9, 
+  3.771848820670726*^9}},ExpressionUUID->"e4e13461-fc2c-49e0-99ac-\
+f302c1dda69f"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -110,7 +145,30 @@ Cell["\<\
 \>", "Text",
  CellChangeTimes->{{3.7718453869806123`*^9, 
   3.771845396656732*^9}},ExpressionUUID->"25afd9d4-c780-4171-abae-\
-755a3c1d64d3"]
+755a3c1d64d3"],
+
+Cell["\<\
+One of the larger problems with this research was gathering data. In future \
+attempts, it would be better to gather a much larger dataset (somewhere \
+around 50,000 images) from several different satellite providers. To stop the \
+network from overfitting on the fine-grained style of the images, we would \
+need to find satellite providers whose data are significantly different.\
+\>", "Text",
+ CellChangeTimes->{{3.7718483582786384`*^9, 3.771848380432389*^9}, {
+  3.7718484169126396`*^9, 
+  3.7718485248639507`*^9}},ExpressionUUID->"59e10b2d-295f-4057-ad1c-\
+fb12da61453c"],
+
+Cell["\<\
+One other option is to improve the model\[CloseCurlyQuote]s feature \
+extraction layer. Right now, the FeatureExtraction function uses the first \
+few layers of the Wolfram ImageIdentify classifier, coupled to an \
+autoencoder. By making a feature extractor which operates only on our data, \
+we might be able to get better results.\
+\>", "Text",
+ CellChangeTimes->{{3.771848604162013*^9, 
+  3.7718486712300177`*^9}},ExpressionUUID->"c77364ed-2950-42c7-a2c5-\
+39abc166ac52"]
 }, Open  ]]
 },
 WindowSize->{923, 1153},
@@ -131,22 +189,24 @@ CellTagsIndex->{}
 Notebook[{
 Cell[CellGroupData[{
 Cell[583, 22, 150, 3, 67, "Section",ExpressionUUID->"dea165a3-a269-4ca6-b342-75e9ae1fd59a"],
-Cell[736, 27, 199, 5, 34, "Text",ExpressionUUID->"10fb42d8-eca1-4674-8540-4d289c28cc8d"]
+Cell[736, 27, 247, 6, 34, "Text",ExpressionUUID->"10fb42d8-eca1-4674-8540-4d289c28cc8d"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[972, 37, 158, 3, 67, "Section",ExpressionUUID->"696c0c70-4c0f-4d6d-968f-41da296b261e"],
-Cell[1133, 42, 880, 18, 166, "Text",ExpressionUUID->"9a0c209c-1670-4491-9466-ebfb48ba480b"],
-Cell[2016, 62, 71, 0, 34, "Text",ExpressionUUID->"7dc5b0eb-7672-47dc-b18c-b8e04c9f1ae7"]
+Cell[1020, 38, 158, 3, 67, "Section",ExpressionUUID->"696c0c70-4c0f-4d6d-968f-41da296b261e"],
+Cell[1181, 43, 1372, 24, 232, "Text",ExpressionUUID->"9a0c209c-1670-4491-9466-ebfb48ba480b"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[2124, 67, 165, 3, 67, "Section",ExpressionUUID->"d8487cbd-5127-4493-9968-68931a0006e7"],
-Cell[2292, 72, 249, 6, 34, "Text",ExpressionUUID->"59df7195-f323-400e-82e9-46c92bc89a7f"],
-Cell[2544, 80, 709, 12, 122, "Text",ExpressionUUID->"8ebeb5f7-aaf8-45b4-812f-760d797ca767"],
-Cell[3256, 94, 146, 3, 34, "Text",ExpressionUUID->"af733af5-e2b2-40bb-81f3-0bf079aecd4c"]
+Cell[2590, 72, 165, 3, 67, "Section",ExpressionUUID->"d8487cbd-5127-4493-9968-68931a0006e7"],
+Cell[2758, 77, 249, 6, 34, "Text",ExpressionUUID->"59df7195-f323-400e-82e9-46c92bc89a7f"],
+Cell[3010, 85, 1063, 17, 122, "Text",ExpressionUUID->"7730966a-973f-4deb-9791-a914db24818d"],
+Cell[4076, 104, 707, 12, 78, "Text",ExpressionUUID->"91f4f529-8af9-4594-8c58-80f2c3193498"],
+Cell[4786, 118, 895, 14, 100, "Text",ExpressionUUID->"e4e13461-fc2c-49e0-99ac-f302c1dda69f"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[3439, 102, 155, 3, 67, "Section",ExpressionUUID->"d8f07d1d-a7b0-4f56-8386-4db96d200add"],
-Cell[3597, 107, 224, 5, 34, "Text",ExpressionUUID->"25afd9d4-c780-4171-abae-755a3c1d64d3"]
+Cell[5718, 137, 155, 3, 67, "Section",ExpressionUUID->"d8f07d1d-a7b0-4f56-8386-4db96d200add"],
+Cell[5876, 142, 224, 5, 34, "Text",ExpressionUUID->"25afd9d4-c780-4171-abae-755a3c1d64d3"],
+Cell[6103, 149, 586, 10, 78, "Text",ExpressionUUID->"59e10b2d-295f-4057-ad1c-fb12da61453c"],
+Cell[6692, 161, 484, 9, 78, "Text",ExpressionUUID->"c77364ed-2950-42c7-a2c5-39abc166ac52"]
 }, Open  ]]
 }
 ]
