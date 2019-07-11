@@ -2,7 +2,7 @@
 
 ## What are we trying to do?
 
-The goal of this project is to produce an algorithm which can find the physical scale of any satellite image: the relationship between distance in pixels, and distance in kilometers across the Earth.
+The goal of this project is to produce an algorithm which can find the physical scale of any satellite image: the relationship between the content of the image, and the area it covers in kilometers.
 
 > figure here, definitely.
 
@@ -14,7 +14,7 @@ There are several ways to approach the problem. Some of the more manual methods 
 
 Those approaches all need lots of manual work, though. We attempted to solve the problem automatically, exploring ideas that might let us predict map zoom without relying on hard-coded rules.
 
-Although we explored several approaches to this problem, the most successful solution used feature extraction to convert each image to a relatively small vector, then trained a small feed-forward neural network to predict zoom from each set of features. Although the self-similarity of each image makes more traditional CV approaches very difficult, a neural network can learn the right features to approximate zoom very well.
+Although we explored several approaches to this problem, the most successful solution used feature extraction to convert each image to a relatively small vector, then trained a small feed-forward neural network to predict zoom from each set of features. Although the self-similarity of each image makes more traditional CV approaches very difficult, a neural network can learn the right features to approximate the zoom very well.
 
 ## Methodology
 
@@ -54,7 +54,7 @@ One attempt was visual pre-processing: running segmentation or binarization on e
 
 > some cool-looking stuff here
 
-All of those preprocessing methods reduce the dimensionality of the images, but it turns out that they reduce the *wrong* dimensions. Our network was supposed to pick up on the large patterns: rivers, landmasses, and so on. When we segmented images, the network was forced to focus on the small details we highlighted. All in all, preprocessing using traditional CV was a failure.
+All of those preprocessing methods reduce the dimensionality of the images, but it turns out that they focus on the wrong features in the process. Our network was supposed to pick up on the large patterns: rivers, landmasses, and so on. When we segmented images, the network was forced to focus on the small details we highlighted. All in all, preprocessing using traditional CV was a failure.
 
 We also tried training a convolutional neural network from scratch on the images, which also failed. The network would, at first, immediately overfit the training set. When we reduced its size, it would fail to converge at all. Despite hours of tweaking, this method did not work either.
 
@@ -113,7 +113,7 @@ When you plot the feature vectors of a few images, you can see the variance betw
 
 > feature space matrix plot
 
-Although the network structure was fairly simple, we used automation to generate the optimal hyperparameters. We trained hundreds of slightly-different networks, and evaluated their statistical performance. Out of many different permutations of layer count, layer size, activation function choice, training speed, and so on, we picked the ones which work best. The final network design we settled on was this:
+Although the network structure was fairly simple, we automated the generation of good hyperparameters. We trained hundreds of slightly-different networks, and evaluated their statistical performance. Out of many different permutations of layer count, layer size, activation function choice, training speed, and so on, we picked the ones which work best. The final network design we settled on was this:
 
 ```
 geoNet = NetChain[ 
@@ -192,7 +192,7 @@ When we evaluated each image in our test set with this network, we got the follo
 
 > result plot! yay :)
 
-This plot shows actual zoom levels on the $x$-axis, and estimated zoom on the $y$. A reference line goes through each point along a 1:1 correspondence between the two. Analyzed statistically, the network had a standard deviation of 30.37 km, and an $r^2$ value of 0.732. 
+This plot shows actual zoom levels on the $x$-axis, and estimated zoom on the $y$. A reference line shows what a perfect prediction would look like. Analyzed statistically, the network had a standard deviation of 30.37 km, and an $r^2$ value of 0.732. 
 
 This network clearly "gets the gist" of the data it's presented. However, these results were not portable to different satellite image datasets. When we evaluated a separate test set, gathered from Wolfram satellite imagery, we got this result:
 
@@ -204,13 +204,13 @@ It is clear that the network is learning something specific to the DigitalGlobe 
 
 It is possible that the network is just confused by the new colors, rather than confused by the structure of the terrain in the Wolfram dataset. Either way, though, the scope of this result is limited to images similar to the satellite dataset on which it was trained.
 
-We used another dataset---of 20,000 mostly-overlapping images of Massachusetts---and exploited overfitting to achieve a much more accurate (yet fragile) prediction. By managing to overfit the terrain, the model could achieve up to an $r^2$ of 0.99, but completely fell apart on any other dataset. Theoretically, you could take this brute-force approach with the entire planet, overfitting deliberately to learn the terrain. However, in our scope, we could not attempt this. 
+We used another dataset of 20,000 mostly-overlapping images of Massachusetts and exploited overfitting to achieve a much more accurate (yet fragile) prediction. By managing to overfit the terrain, the model could achieve up to an $r^2$ of 0.99, but completely fell apart on any other dataset. Theoretically, you could take this brute-force approach with the entire planet, overfitting deliberately to learn the terrain. However, in our scope, we could not attempt this. 
 
 ## Future work
 
 One of the larger problems with this research was gathering data. In future attempts, it would be better to gather a much larger dataset (somewhere around 50,000 images) from several different satellite providers. To stop the network from overfitting on the fine-grained style of the images, we would need to find satellite providers whose data are significantly different.
 
-One other option is to improve the model's feature extraction layer. Right now, the FeatureExtraction function uses the first few layers of the Wolfram ImageIdentify classifier, coupled to an autoencoder. By making a feature extractor which operates only on our data, we might be able to get better results.
+One other option is to improve the model's feature extraction layer. Right now, the FeatureExtraction function uses the first few convolutional layers of the Wolfram ImageIdentify classifier as a starting point. By training our own convolution step specific to satellite images on a much larger dataset, we might be able to get more accurate results.
 
 # Final thoughts
 
